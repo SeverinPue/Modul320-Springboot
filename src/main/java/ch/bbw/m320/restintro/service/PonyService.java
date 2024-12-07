@@ -1,22 +1,25 @@
 package ch.bbw.m320.restintro.service;
 
-import ch.bbw.m320.restintro.dto.PonyDto;
-import ch.bbw.m320.restintro.entity.PonyEntity;
-import ch.bbw.m320.restintro.repository.PonyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import ch.bbw.m320.restintro.dto.PonyDto;
+import ch.bbw.m320.restintro.entity.PonyEntity;
+import ch.bbw.m320.restintro.repository.PonyRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 
 @Service
 public class PonyService {
 
-    @Autowired
-    private PonyRepository ponyRepository;
+    private final PonyRepository ponyRepository;
+
+    // prefer constructor injection to @Autowired (sonar claims this as well)
+    public PonyService(PonyRepository ponyRepository) {
+        this.ponyRepository = ponyRepository;
+    }
 
     public List<PonyDto> getPonies() {
         return ponyRepository.findAll().stream()
@@ -51,10 +54,13 @@ public class PonyService {
     }
 
     public ResponseEntity<PonyDto> updatePony(int id, PonyDto updatedPony) {
+        // notice: ResponseEntity is something from a Controller: it has to do with REST and doesn't belong in a service
+        // we anyway would like to avoid using ResponseEntity<> wrappers whenever possible.
+        // instead return PonyDto here and for the exception case throw a custom exception annotated with @ResponseCode
         Optional<PonyEntity> existingPony = ponyRepository.findById(id);
         if (existingPony.isPresent()) {
             PonyEntity ponyEntity = existingPony.get();
-            ponyEntity.setName(updatedPony.name);
+            ponyEntity.setName(updatedPony.getName()); // use getters instead of public attributes
             ponyEntity.setAge(updatedPony.age);
             ponyEntity.setHeight(updatedPony.height);
             ponyEntity.setWeight(updatedPony.weight);
@@ -78,6 +84,7 @@ public class PonyService {
         }
     }
 
+    // for production-like setups we would use
     private PonyDto mapToDto(PonyEntity ponyEntity) {
         return new PonyDto(
                 ponyEntity.name,

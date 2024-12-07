@@ -1,5 +1,7 @@
 package ch.bbw.m320.restintro.api.v1;
 
+import java.util.List;
+
 import ch.bbw.m320.restintro.dto.PonyDto;
 import ch.bbw.m320.restintro.service.PonyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,9 +13,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Pony API", description = "API zum Verwalten von Ponys")
 @CrossOrigin
@@ -26,9 +34,7 @@ public class PonyController {
 
 	@Operation(summary = "Alle Ponys abrufen", description = "Liefert eine Liste aller Ponys")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Liste der Ponys erfolgreich abgerufen",
-					content = {@Content(mediaType = "application/json",
-							schema = @Schema(implementation = PonyDto.class))})
+			@ApiResponse(responseCode = "200", description = "Liste der Ponys erfolgreich abgerufen")
 	})
 	@GetMapping
 	public ResponseEntity<Object> getPonies() {

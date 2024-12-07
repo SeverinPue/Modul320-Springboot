@@ -2,8 +2,12 @@ package ch.bbw.m320.restintro.dto;
 
 import java.time.LocalDate;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+// replace this by a record or use Lombok: this is too verbose :)
+// ...and the idea would have been to come up with your own DTO.
 public class PonyDto {
-    public String name;
+    public String name; // avoid public for dto's
     public int age;
     public int id;
     public double height;
@@ -26,6 +30,7 @@ public class PonyDto {
         this.favouriteFood = favouriteFood;
     }
 
+    @Schema(example = "Thunder", description = "name of this pony") // your dto currently doesn't have any examples nor descriptions :(
     public String getName() {
         return name;
     }
